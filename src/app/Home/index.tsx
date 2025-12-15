@@ -1,4 +1,11 @@
-import { View, Image, TouchableOpacity, Text, FlatList } from 'react-native';
+import {
+	View,
+	Image,
+	TouchableOpacity,
+	Text,
+	FlatList,
+	Alert,
+} from 'react-native';
 import { useState } from 'react';
 
 import { styles } from './styles';
@@ -26,6 +33,20 @@ const ITEMS = [
 export default function Home() {
 	const [filter, setFilter] = useState(FilterStatus.PENDING);
 	const [description, setDescription] = useState('');
+	const [items, setItems] = useState<any>([]);
+
+	function handleAdd() {
+		if (!description.trim()) {
+			return Alert.alert('Adicionar', 'Informe a descrição para adicionar.');
+		}
+
+		const newItem = {
+			id: Math.random().toString(36).substring(2),
+			description,
+			status: FilterStatus.PENDING,
+		};
+		setItems((prevState: any) => [...prevState, newItem]);
+	}
 
 	return (
 		<View style={styles.container}>
@@ -36,7 +57,7 @@ export default function Home() {
 					onChangeText={setDescription}
 					value={description}
 				/>
-				<Button title='Entrar' />
+				<Button title='Adicionar' onPress={handleAdd} />
 			</View>
 			<View style={styles.content}>
 				<View style={styles.header}>
@@ -55,7 +76,7 @@ export default function Home() {
 					</TouchableOpacity>
 				</View>
 				<FlatList
-					data={ITEMS}
+					data={items}
 					keyExtractor={(item) => item.id}
 					renderItem={({ item }) => (
 						<Item
