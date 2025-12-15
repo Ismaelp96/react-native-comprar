@@ -35,12 +35,12 @@ export default function Home() {
 		};
 
 		await itemsStorage.add(newItem);
-		await getItems();
+		await ItemsByStatus();
 	}
 
-	async function getItems() {
+	async function ItemsByStatus() {
 		try {
-			const response = await itemsStorage.get();
+			const response = await itemsStorage.getByStatus(filter);
 			setItems(response);
 		} catch (error) {
 			console.error(error);
@@ -49,8 +49,8 @@ export default function Home() {
 	}
 
 	useEffect(() => {
-		getItems();
-	}, []);
+		ItemsByStatus();
+	}, [filter]);
 
 	return (
 		<View style={styles.container}>
